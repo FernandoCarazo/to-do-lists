@@ -18,25 +18,25 @@ END
 
 
 
-IF NOT EXISTS(SELECT * FROM Task WHERE TaskName = 'Walk the Dog'
+IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Walk the Dog'
 )
---Si no existen, se agregan datos de prueba a la tabla Task (Nombre, descripcion, estado, y persona ligada)
+--Si no existen, se agregan datos de prueba a la tabla Assignment (Nombre, descripcion, estado, y persona ligada)
 BEGIN
-	INSERT INTO Task(TaskName, TaskDescription, TaskDate, PersonId, StatusId) VALUES ('Walk the Dog', 'Take the dog for a brisk walk', '2023-07-15 06:00:00.000', 1, 1)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Walk the Dog', 'Take the dog for a brisk walk', '2023-07-15 06:00:00.000', 1, 1)
 END
 GO
 
 
-IF NOT EXISTS(SELECT * FROM Task WHERE TaskName = 'Grocery Shopping'
+IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Grocery Shopping'
 )
 BEGIN
-	INSERT INTO Task(TaskName, TaskDescription, TaskDate, PersonId, StatusId) VALUES ('Grocery Shopping', 'Compile a list of necessary groceries and head to the nearest supermarket or grocery store.', '2023-07-28 19:00:00.000', 2, 1)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Grocery Shopping', 'Compile a list of necessary groceries and head to the nearest supermarket or grocery store.', '2023-07-28 19:00:00.000', 2, 1)
 END
 GO
 
-IF NOT EXISTS(SELECT * FROM Task WHERE TaskName = 'Pay Bills'
+IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Pay Bills'
 )
 BEGIN
-	INSERT INTO Task(TaskName, TaskDescription, TaskDate, PersonId, StatusId) VALUES ('Pay Bills', 'Set aside time to review and pay outstanding bills.', '2023-07-25 20:30:00.000', 3, 3)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Pay Bills', 'Set aside time to review and pay outstanding bills.', '2023-07-25 20:30:00.000', 3, 3)
 END
 GO

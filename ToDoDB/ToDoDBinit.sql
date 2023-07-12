@@ -20,10 +20,10 @@ BEGIN
 END
 GO
 
---Si no existe, se crea la tabla TaskStatus 
-IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name = 'TaskStatus')
+--Si no existe, se crea la tabla AssignmentStatus 
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name = 'AssignmentStatus')
 BEGIN
-	CREATE TABLE TaskStatus(
+	CREATE TABLE AssignmentStatus(
 	Id INT IDENTITY (1,1) NOT NULL,
 	Status VARCHAR(20) NOT NULL,
 	CONSTRAINT PKStatus PRIMARY KEY(Id) 
@@ -31,37 +31,37 @@ BEGIN
 END
 GO
 
---Si no existe, se crea la tabla Task
-IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name = 'Task')
+--Si no existe, se crea la tabla Assignment
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name = 'Assignment')
 BEGIN
-	CREATE TABLE Task (
+	CREATE TABLE Assignment (
 	Id INT IDENTITY (1,1) NOT NULL,
-	TaskName VARCHAR(50) NOT NULL,
-	TaskDescription VARCHAR (300) NOT NULL,
-	TaskDate DATETIME2 NOT NULL,
+	AssignmentName VARCHAR(50) NOT NULL,
+	AssignmentDescription VARCHAR (300) NOT NULL,
+	AssignmentDate DATETIME2 NOT NULL,
 	---------------------
 	StatusId INT NOT NULL,
 	PersonId INT NOT NULL,
-	CONSTRAINT PKTask PRIMARY KEY(Id),
-	CONSTRAINT FKPersonTaskPersonId     FOREIGN KEY (PersonId) REFERENCES Person(Id),
-	CONSTRAINT FKTaskStatusTaskStatusId FOREIGN KEY (StatusId) REFERENCES TaskStatus(Id)	
+	CONSTRAINT PKAssignments PRIMARY KEY(Id),
+	CONSTRAINT FKPersonAssignmentPersonId FOREIGN KEY (PersonId) REFERENCES Person(Id),
+	CONSTRAINT FKAssignmentStatusAssignmentStatusId FOREIGN KEY (StatusId) REFERENCES AssignmentStatus(Id)	
 );
 END
 GO
 
---Si no existen, se agregan los datos de estados a la tabla TaskStatus
-IF NOT EXISTS (SELECT * FROM TaskStatus WHERE Status = 'Active')
+--Si no existen, se agregan los datos de estados a la tabla AssignmentStatus
+IF NOT EXISTS (SELECT * FROM AssignmentStatus WHERE Status = 'Active')
 BEGIN
-	INSERT INTO TaskStatus(Status) VALUES ('Active')
+	INSERT INTO AssignmentStatus(Status) VALUES ('Active')
 END 
 
-IF NOT EXISTS (SELECT * FROM TaskStatus WHERE Status = 'Completed')
+IF NOT EXISTS (SELECT * FROM AssignmentStatus WHERE Status = 'Completed')
 BEGIN
-	INSERT INTO TaskStatus(Status) VALUES ('Completed')
+	INSERT INTO AssignmentStatus(Status) VALUES ('Completed')
 END
 
-IF NOT EXISTS (SELECT * FROM TaskStatus WHERE Status = 'Canceled')
+IF NOT EXISTS (SELECT * FROM AssignmentStatus WHERE Status = 'Canceled')
 BEGIN
-	INSERT INTO TaskStatus(Status) VALUES ('Canceled')
+	INSERT INTO AssignmentStatus(Status) VALUES ('Canceled')
 END 
 GO
