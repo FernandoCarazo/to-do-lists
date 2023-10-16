@@ -1,0 +1,30 @@
+<div *ngFor="let user of Users; let iControl=index" class="card">
+    <h2>{{user.firstName +" "+ user.lastName}}</h2>
+    <div>
+
+    </div>
+    <h5>{{user.email}}</h5>
+    <h5>{{"UserId: " + user.id}}</h5>
+
+
+    <div class="userOptions">
+
+        <button class="btn" routerLink='users/{{user.id}}/tasks'>
+
+        </button>
+
+
+        <button class="btn">
+
+        </button>
+
+        <button class="btn">
+
+        </button>
+
+    </div>
+</div>
+
+
+
+ashjdfahjsdhasdgas
