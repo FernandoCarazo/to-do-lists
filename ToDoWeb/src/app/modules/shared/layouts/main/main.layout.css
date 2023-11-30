@@ -1,10 +1,13 @@
 header {
-    height: 7rem;
+    max-height: 7rem;
     padding: 1rem;
     background: var(--top-bar-background);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
 }
 
 ul {
@@ -23,13 +26,17 @@ a {
     transition: background-color 0.2s linear;
 }
 
-figure {
-    height: 100%;
+
+.img-container {
+    max-height: 7rem;
+    padding: 0rem;
+    transition: none;
+
 }
 
-figure img {
-    height: 100%;
-    width: auto;
+.img-container img {
+    max-height: 7rem;
+
 }
 
 button {
@@ -42,7 +49,7 @@ button {
     transition: background-color 0.2s linear;
 }
 
-a:hover,
+li a:hover,
 a.active,
 button:hover {
     background: var(--main-hover-background);

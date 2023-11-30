@@ -2,15 +2,16 @@
     box-sizing: border-box;
 }
 
+.padding {
+    padding-top: 100px;
+}
+
 .gallery {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 16px;
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
 }
 
 .topTitle {
@@ -30,8 +31,19 @@ h1 {
     margin-right: 50%;
 }
 
+h2 {
+    font-size: 3rem;
+    font-weight: 500;
+    margin-right: 50%;
+}
 
-.addUser {
+h3 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-right: 50%;
+}
+
+.addTask {
     width: 140px;
     height: 45px;
     background-color: transparent;
@@ -42,34 +54,79 @@ h1 {
     background-color: transparent;
 }
 
+.cardContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .card {
-    width: 400px;
-    height: 160px;
+    width: 600px;
+    height: 210px;
     background: var(--top-bar-background);
     border-top: 4px solid #4772fd;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 30px 30px 30px 30px;
+
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardContent {
+    text-align: left;
+    width: 80%;
+    height: 100%;
+}
+
+.pfp {
+    width: 110px;
+    height: 110px;
+    margin-left: 3px;
+    margin-top: 20px;
+    opacity: 0.6;
+}
+
+.tasksContainer {
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.TaskCard {
+    width: 100%;
+    width: 600px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: var(--top-bar-background);
+    text-align: center;
+    text-decoration: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: rgba(48, 46, 46, 0.541) 0px 3px 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .leftSideCard {
     text-align: left;
     width: 70%;
     height: 100%;
-}
-
-.pfp {
-    width: 90px;
-    height: 90px;
-    margin-left: 3px;
-    margin-top: 20px;
-    opacity: 0.6;
 }
 
 .userInfo {
@@ -84,6 +141,10 @@ h1 {
     height: 100%;
 }
 
+input #adesc {
+    height: 3rem;
+}
+
 .dropbtn {
     font-size: 18px;
     border: none;
@@ -92,55 +153,8 @@ h1 {
     color: white;
     opacity: 0.5;
     display: block;
-    margin-top: 50%;
+    margin-top: 20%;
     margin-left: 70%;
-}
-
-.dropdown-content {
-    margin-top: 10px;
-    margin-left: 15px;
-    background-color: transparent;
-    display: none;
-    overflow: auto;
-    z-index: 2;
-    flex-direction: column;
-    border-radius: 4px;
-    width: 80px;
-    margin: 0;
-    margin: auto;
-}
-
-.dropdown-content button {
-    color: black;
-    text-decoration: none;
-    display: block;
-    font-size: 1.3rem;
-    text-align: center;
-    width: 100%;
-    border-color: black;
-    border-width: 0.5px;
-    background-color: white;
-    opacity: 1;
-}
-
-.dropbtn:hover {
-    opacity: 1;
-}
-
-.addUser:hover {
-    background: var(--main-hover-background);
-}
-
-.show {
-    display: block;
-}
-
-.pfp:hover {
-    opacity: 1;
-}
-
-.dropdown-content button:hover {
-    opacity: 0.9;
 }
 
 /* Clearfix (clear floats) */

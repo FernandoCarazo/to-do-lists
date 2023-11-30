@@ -1,30 +1,71 @@
-<div *ngFor="let user of Users; let iControl=index" class="card">
-    <h2>{{user.firstName +" "+ user.lastName}}</h2>
-    <div>
+<div class="padding">
+    <div class="topTitle">
+        <h1>User Management</h1>
+        <button class="addUser" (click)="openModal('Create User')"> ADD USER + </button>
+        <app-modal [title]="modalTitle" [isOpen]="isCreateModalOpen" (closeModal)="closeModal('Create User')">
+            <form (ngSubmit)="createUser()">
+                <label for="fname">First name:</label>
+                <input type="text" id="fname" name="fname" [(ngModel)]="userToCreate.firstName" required><br>
 
+                <label for="lname">Last name:</label>
+                <input type="text" id="lname" name="lname" [(ngModel)]="userToCreate.lastName" required><br><br>
+
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" [(ngModel)]="userToCreate.email" required><br>
+
+                <input type="submit" value="Submit">
+            </form>
+        </app-modal>
     </div>
-    <h5>{{user.email}}</h5>
-    <h5>{{"UserId: " + user.id}}</h5>
 
+    <div class="gallery">
 
-    <div class="userOptions">
+        <div *ngFor="let user of Users; let iControl=index" class="card">
 
-        <button class="btn" routerLink='users/{{user.id}}/tasks'>
+            <div class="leftSideCard">
+                <div class="userPhoto">
+                    <img src="assets\img\usuario.png" [routerLink]="['/', user.id, 'tasks']" class="pfp">
+                </div>
 
-        </button>
+                <div class="userInfo">
+                    <h2 [routerLink]="['/', user.id, 'tasks']">{{user.firstName +" "+ user.lastName}}</h2>
+                    <h5 [routerLink]="['/', user.id, 'tasks']">{{user.email}}</h5>
+                </div>
+            </div>
 
+            <div class="rightSideCard">
+                <!-- <div class="dropdown"> -->
+                <button (click)="toggleDropdown(user.id)" class="dropbtn">
+                    <fa-icon [icon]="faEllipsisVertical" class="icon"></fa-icon>
+                </button>
+                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen[user.id]}" class="dropdown-content">
+                    <button (click)="openEditUserModal('Edit User', user)">Edit</button>
+                    <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen[user.id]"
+                        (closeModal)="closeModal('Edit User', user.id)">
+                        <form (ngSubmit)="updateUser()">
+                            <label for="fname">First name:</label>
+                            <input type="text" id="fname" name="fname" [(ngModel)]="userToUpdate.firstName"><br>
 
-        <button class="btn">
+                            <label for="lname">Last name:</label>
+                            <input type="text" id="lname" name="lname" [(ngModel)]="userToUpdate.lastName"><br><br>
 
-        </button>
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email" [(ngModel)]="userToUpdate.email"><br>
 
-        <button class="btn">
+                            <input type="submit" value="Submit">
+                        </form>
+                    </app-modal>
 
-        </button>
+                    <button (click)="openModal('Delete User', user)">Delete</button>
+                    <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen[user.id]"
+                        (closeModal)="closeModal('Delete User', user.id)">
 
+                        <button (click)="deleteUser(Users[iControl]?.id)">YES </button>
+                        <button (click)="closeModal('Delete User', user.id)">NO</button>
+                    </app-modal>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-
-
-ashjdfahjsdhasdgas

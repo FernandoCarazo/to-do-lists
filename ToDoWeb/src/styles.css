@@ -15,6 +15,19 @@ body {
     scrollbar-width: thin;
 }
 
+.padding {
+    padding-top: 100px;
+    padding-bottom: 80px;
+    padding-left: 30px;
+    padding-right: 30x;
+
+
+    display: flex;
+    min-height: 75vh;
+    flex-direction: column;
+    margin-top: auto;
+}
+
 body::-webkit-scrollbar-thumb {
     background: var(--color-scrollbar-light);
 }

@@ -83,22 +83,10 @@ namespace API.Validators
             {
                 innerMessages.Add("Email no puede contener más de 50 caracteres");
             }
-            else if (this._database.Person.Any(p => p.Email == data.Email))
-            {
-                innerMessages.Add("Ya hay una persona registrada con este email");
-            }
-            messages.AddRange(innerMessages);
-            return !innerMessages.Any();
-        }
-        public bool ValidateDelete(int id, List<string> messages)
-        {
-            List<string> innerMessages = new();
-
-            if (this._database.Assignment.Any(a => a.PersonId == id))
-            {
-                innerMessages.Add("No se puede borrar la persona. La persona tiene tareas asociadas en el sistema");
-            }
-
+            //else if (this._database.Person.Any(p => p.Email == data.Email))
+            //{
+            //    innerMessages.Add("Ya hay una persona registrada con este email");
+            //}
             messages.AddRange(innerMessages);
             return !innerMessages.Any();
         }
