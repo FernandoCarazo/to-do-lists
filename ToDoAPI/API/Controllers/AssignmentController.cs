@@ -130,22 +130,22 @@ namespace API.Controllers
             return response;
         }
 
-        [HttpDelete]
-        [Route("{taskId}")]
-        public async Task<ActionResult<APIResponse>> DeleteAssignment(int taskId)
-        {
-            Assignment? assignment = await this._assignmentService.FindAssignment(taskId);
-            if (assignment == null)
-            {
-                return HttpErrors.NotFound("Tarea no existe en el sistema");
-            }
+        //[HttpDelete]
+        //[Route("{taskId}")]
+        //public async Task<ActionResult<APIResponse>> DeleteAssignment(int taskId)
+        //{
+        //    Assignment? assignment = await this._assignmentService.FindAssignment(taskId);
+        //    if (assignment == null)
+        //    {
+        //        return HttpErrors.NotFound("Tarea no existe en el sistema");
+        //    }
 
-            APIResponse response = new();
-            await this._assignmentService.DeleteAssignment(assignment);
-            response.Data = this._mapper.Map<Assignment, GetAssignmentDTO>(assignment);
-            response.Messages.Add("Tarea ha sido borrada");
+        //    APIResponse response = new();
+        //    await this._assignmentService.DeleteAssignment(assignment);
+        //    response.Data = this._mapper.Map<Assignment, GetAssignmentDTO>(assignment);
+        //    response.Messages.Add("Tarea ha sido borrada");
 
-            return response;
-        }
+        //    return response;
+        //}
     }
 }

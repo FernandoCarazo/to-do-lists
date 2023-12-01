@@ -10,6 +10,6 @@ namespace API.Services.PersonService
         Task<Person> FindPerson(int id);
         Task InsertPerson(Person entity);
         Task UpdatePerson(Person entity);
-        Task DeletePerson(Person entity);
+        Task DeletePerson(Person entity, bool loadAssignments = false);
     }
 }

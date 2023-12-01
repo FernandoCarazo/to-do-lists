@@ -107,13 +107,9 @@ namespace API.Controllers
             }
 
             APIResponse response = new();
-            response.Success = this._personValidator.ValidateDelete(id, response.Messages);
-            if (response.Success)
-            {
-                await this._personService.DeletePerson(person);
-                response.Data = this._mapper.Map<Person, GetPersonDTO>(person);
-                response.Messages.Add("Persona ha sido borrada");
-            }
+            await this._personService.DeletePerson(person, true);
+            response.Data = this._mapper.Map<Person, GetPersonDTO>(person);
+            response.Messages.Add("Persona ha sido borrada");
 
             return response;
         }

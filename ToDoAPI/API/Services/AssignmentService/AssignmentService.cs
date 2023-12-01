@@ -40,10 +40,6 @@ namespace API.Services.AssignmentService
             this._database.Assignment.Update(entity);
             await this._database.SaveChangesAsync();
         }
-        public async Task DeleteAssignment(Assignment entity)
-        {
-            this._database.Assignment.Remove(entity);
-            await this._database.SaveChangesAsync();
-        }
+
     }
 }

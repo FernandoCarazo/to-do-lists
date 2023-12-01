@@ -9,7 +9,5 @@ namespace API.Services.AssignmentService
         Task<Assignment?> FindAssignment(int id);
         Task InsertAssignment(Assignment entity);
         Task UpdateAssignment(Assignment entity);
-        Task DeleteAssignment(Assignment entity);
-
     }
 }
