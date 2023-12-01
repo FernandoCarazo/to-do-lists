@@ -30,7 +30,6 @@ h1 {
     margin-right: 50%;
 }
 
-
 .addUser {
     width: 140px;
     height: 45px;
@@ -40,6 +39,10 @@ h1 {
     color: white;
     border-color: white;
     background-color: transparent;
+}
+
+input {
+    margin-bottom: 5px;
 }
 
 .card {
@@ -94,6 +97,10 @@ h1 {
     display: block;
     margin-top: 50%;
     margin-left: 70%;
+}
+
+.myDropdown {
+    background-color: aquamarine;
 }
 
 .dropdown-content {

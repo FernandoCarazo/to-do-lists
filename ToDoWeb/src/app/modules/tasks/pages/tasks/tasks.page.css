@@ -109,6 +109,8 @@ h3 {
     object-fit: cover;
     border-radius: 10px;
     background: var(--top-bar-background);
+    border-bottom: 3px solid rgba(52, 184, 135, 0.5);
+
     text-align: center;
     text-decoration: none;
     padding-top: 10px;
@@ -120,7 +122,8 @@ h3 {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 15px;
+    margin: 10px;
+    opacity: 0.8;
 }
 
 .leftSideCard {
@@ -143,6 +146,16 @@ h3 {
 
 input #adesc {
     height: 3rem;
+}
+
+.TaskCard:hover {
+    opacity: 1;
+
+}
+
+.dropbtn:hover {
+    opacity: 1;
+
 }
 
 .dropbtn {

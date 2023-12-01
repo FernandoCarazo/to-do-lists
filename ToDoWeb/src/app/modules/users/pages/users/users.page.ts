@@ -3,8 +3,6 @@ import { CRUDService } from 'src/app/services/crud/crud.service';
 import { ActivatedRoute } from '@angular/router';
 import { user } from 'src/app/services/objects/user';
 import { Router } from '@angular/router';
-import { faL, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -14,12 +12,9 @@ import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 })
 
 export class UsersPage {
-  faPencil = faPencil;
-  faTrash = faTrash;
   faEllipsisVertical = faEllipsisVertical;
-  public userid:string;
   Users:user[];
-
+  
   userToCreate: any = {
     firstName: '',
     lastName: '',
@@ -31,59 +26,46 @@ export class UsersPage {
     email: ''
   };
 
+   userid:string;
+   modalTitle: string = "";
    isCreateModalOpen = false;
-   isEditUserModalOpen: { [userId: string]: boolean } = {};
-   isDeleteUserModalOpen : { [userId: string]: boolean } = {};
+   isEditUserModalOpen= false;
+   isDeleteUserModalOpen = false;
+
    isDropdownOpen: { [key: string]: boolean } = {};   
    lastOpenedDropdownId: string | null = null;
 
-   //isDropdownOpen = false;
-   modalTitle: string = "";
 
    openModal(modalType: string, user?: user) {
     this.modalTitle = modalType;
 
     if(modalType === 'Create User') {
      this.isCreateModalOpen = true;
-     for (let userId in this.isDeleteUserModalOpen) {
-      this.isDeleteUserModalOpen[userId] = false;
+    } 
+    else if(modalType === 'Edit User') {
+      this.isEditUserModalOpen = true;
+      this.modalTitle = modalType;
+      this.userid = user.id;
+      this.userToUpdate = {
+        firstName: user.firstName, // You can set initial values if needed
+        lastName: user.lastName,
+        email: user.email,
+      };
     }
-    for (let userId in this.isEditUserModalOpen) {
-      this.isEditUserModalOpen[userId] = false;
-    }
-    } else if (modalType === 'Delete User') {
-      this.isDeleteUserModalOpen[user.id] = true;
+    else if (modalType === 'Delete User') {
+      this.isDeleteUserModalOpen= true;
     }   
     }
-
-
-   openEditUserModal(modalType: string, user: user) {
-    this.modalTitle = modalType;
-    this.userid = user.id;
-    console.log(this.modalTitle);
-    
-    this.userToUpdate = {
-      firstName: user.firstName, // You can set initial values if needed
-      lastName: user.lastName,
-      email: user.email,
-    };
-    if (modalType === 'Edit User') {
-      this.isEditUserModalOpen[user.id] = true;
-    }
-  }
-
-   
-   closeModal(modalType: string, userId?: string) {
+ 
+   closeModal(modalType: string) {
     if(modalType === 'Create User'){
       this.isCreateModalOpen = false;
      }   
-     else if (modalType === 'Edit User' && userId) {
-      // Set the flag in the dictionary for this task
-      this.isEditUserModalOpen[userId] = false;
-    }   
-    else if (modalType === 'Delete User' && userId) {
-      // Set the flag in the dictionary for this task
-      this.isDeleteUserModalOpen[userId] = false;
+     else if(modalType === 'Edit User'){
+        this.isEditUserModalOpen=false;
+     }  
+    else if (modalType === 'Delete User') {
+          this.isDeleteUserModalOpen = false;
     }
    }
 
@@ -107,8 +89,7 @@ export class UsersPage {
           lastName: '',
           email: ''
         };
-        // window.location.reload();
-
+         window.location.reload();
       },
       error: (error) => {
         // Handle errors, e.g., show an error message.
@@ -120,7 +101,7 @@ export class UsersPage {
   updateUser() {
     this.crudService.updateUser(this.userToUpdate, this.userid).subscribe(response => {
       console.log('User updated successfully', response);
-      this.isEditUserModalOpen[this.userid] = false;
+      this.isEditUserModalOpen = false;
       window.location.reload();
     });
   }
@@ -130,9 +111,8 @@ export class UsersPage {
       next: (response) => {
         console.log(userId);
         console.log('User deleted successfully', response);
-        this.isDeleteUserModalOpen[userId] = false;
+        this.isDeleteUserModalOpen = false;
         window.location.reload();
-
       },
       error: (error) => {
         console.error('Error deleting user', error);

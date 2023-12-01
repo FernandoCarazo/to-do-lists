@@ -9,6 +9,4 @@ export class ModalComponent {
   @Input() title: string;
   @Input() isOpen: boolean;
   @Output() closeModal = new EventEmitter<void>();
-  @Input() contentType: string;
-
 }

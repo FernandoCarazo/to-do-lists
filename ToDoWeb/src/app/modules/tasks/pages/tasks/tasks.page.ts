@@ -4,10 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { task } from 'src/app/services/objects/task'; 
 import { Router } from '@angular/router';
 import { user } from 'src/app/services/objects/user';
-import { status } from 'src/app/services/objects/status';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -17,16 +14,24 @@ import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 })
 export class TasksPage {
   faPencil = faPencil;
-  faTrash = faTrash;
-  faEllipsisVertical = faEllipsisVertical;
+
   public id:string;
   public userid:string;
   public taskid: string;
   public Tasks:task[] =[];
-  public ActiveTasks:task[]= [];
-  public CanceledTasks:task[]= [];
-  public CompletedTasks:task[]= [];
   Users:user[]=[];
+
+  statusOptions: any[] = [
+    { id: 1, name: 'Active' },
+    { id: 2, name: 'Completed' },
+    { id: 3, name: 'Canceled' }
+  ];
+
+  groupedTasks: { [status: string]: task[] } = {
+    'Active': [],
+    'Completed': [],
+    'Canceled': []
+  };
 
   taskToCreate: any = {
     assignmentName: '',
@@ -42,48 +47,28 @@ export class TasksPage {
     StatusId: ''
   };
 
-  statusOptions: any[] = [
-    { id: 1, name: 'Active' },
-    { id: 2, name: 'Completed' },
-    { id: 3, name: 'Canceled' }
-  ];
-  
   isCreateTaskModalOpen = false;
-  isDropdownOpen: { [key: string]: boolean } = {};   
-  lastOpenedDropdownId: string | null = null;
-  
-  isEditTaskModalOpen: { [taskId: string]: boolean } = {}; 
+  isEditTaskModalOpen = false;
   modalTitle: string = '';
-  openModal(modalType: string, task?: task) {
-    if (modalType === 'Edit Task') {
-      this.isEditTaskModalOpen[task.id] = true;
-    }
-  }
 
-  openEditTaskModal(modalType: string, task: task, userId: string) {
+
+  openModal(modalType: string, task?: task, userId?: string) {
     this.modalTitle = modalType;
 
-    this.userid = userId;
-    this.taskToUpdate = {
-      id: task.id,
-      assignmentName: task.assignmentName,
-      assignmentDescription: task.assignmentDescription,
-      assignmentDate: task.assignmentDate,
-      StatusId: task.status.id,
-    };
-    console.log(task.status.id);
-    console.log(this.taskToUpdate.StatusId);
-
-    if (modalType === 'Edit Task') {
-      this.isEditTaskModalOpen[task.id] = true;
+    if(modalType === 'Create Task'){
+      this.userid = userId;
+      this.isCreateTaskModalOpen = true;      
     }
-  }
-
-  openCreateTaskModal(modalType: string , userId: string) {
-this.modalTitle = modalType;
-    this.userid = userId;
-    if (modalType === 'Create Task') {
-      this.isCreateTaskModalOpen = true;
+    else if (modalType === 'Edit Task') {
+      this.userid = userId;
+      this.taskToUpdate = {
+        id: task.id,
+        assignmentName: task.assignmentName,
+        assignmentDescription: task.assignmentDescription,
+        assignmentDate: task.assignmentDate,
+        StatusId: task.status.id,
+      };
+      this.isEditTaskModalOpen = true;
     }
   }
 
@@ -92,20 +77,9 @@ this.modalTitle = modalType;
       this.isCreateTaskModalOpen = false;
      }   
      else if (modalType === 'Edit Task' && taskId) {
-      // Set the flag in the dictionary for this task
-      this.isEditTaskModalOpen[taskId] = false;
-    }   
-  }
+      this.isEditTaskModalOpen = false;
 
-  toggleDropdown(userId: string): void {
-    if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
-      // Close the last opened dropdown if a different one is clicked
-      this.isDropdownOpen[this.lastOpenedDropdownId] = false;
-    }
-    // Toggle the dropdown for the current user
-    this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
-    // Update the last opened dropdown ID
-    this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
+    }   
   }
 
   createTask() {
@@ -134,7 +108,7 @@ this.modalTitle = modalType;
       console.log('Task updated successfully', response);
       console.log(this.taskToUpdate.status);
 
-      this.isEditTaskModalOpen[this.taskToUpdate.id] = false;
+      this.isEditTaskModalOpen= false;
       this.taskToUpdate = {
         id:'',
         assignmentName: '',
@@ -147,6 +121,43 @@ this.modalTitle = modalType;
     });
   }
 
+  groupTasksByStatus() {
+    this.groupedTasks = {
+      'Active': [],
+      'Completed': [],
+      'Canceled': []
+    };
+  
+    this.Tasks.forEach(task => {
+      switch (task.status.status) {
+        case 'Active':
+          this.groupedTasks['Active'].push(task);
+          break;
+        case 'Completed':
+          this.groupedTasks['Completed'].push(task);
+          break;
+        case 'Canceled':
+          this.groupedTasks['Canceled'].push(task);
+          break;
+        default:
+          // Handle other status values if needed
+          break;
+      }
+    });
+  }
+
+  getBorderColor(taskStatus: string): string {
+    switch (taskStatus) {
+      case 'Active':
+        return '#c7d927'; // Set the color for active tasks  
+        case 'Completed':
+        return '#27d948'; // Set the color for completed tasks
+        case 'Canceled':
+        return '#d92727'; // Set the color for canceled tasks
+      default:
+        return '#4772fd'; // Default color for unknown status
+    }
+  }
 
     constructor(private router: Router, 
       private route: ActivatedRoute, 
@@ -163,23 +174,8 @@ this.modalTitle = modalType;
       
       this.crudService.GetTasks(this.id).subscribe(result=>{
         this.Tasks = result.data;
-
-        console.log("All Tasks:", this.Tasks);
-
-      this.ActiveTasks = this.Tasks.filter((task: any) => {
-        return task.status && +task.status.id === 1;
-      });
-
-      this.CompletedTasks = this.Tasks.filter((task: any) => {
-        return task.status && +task.status.id === 2;
-      });
-
-      this.CanceledTasks = this.Tasks.filter((task: any) => {
-        return task.status && +task.status.id === 3;
-      });
-        
-        console.log("Active Tasks:", this.ActiveTasks);
-        
+        this.groupTasksByStatus();
+        console.log("All Tasks:", this.Tasks);  
       });
       
     }

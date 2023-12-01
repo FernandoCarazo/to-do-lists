@@ -8,7 +8,7 @@
                 <input type="text" id="fname" name="fname" [(ngModel)]="userToCreate.firstName" required><br>
 
                 <label for="lname">Last name:</label>
-                <input type="text" id="lname" name="lname" [(ngModel)]="userToCreate.lastName" required><br><br>
+                <input type="text" id="lname" name="lname" [(ngModel)]="userToCreate.lastName" required><br>
 
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" [(ngModel)]="userToCreate.email" required><br>
@@ -21,7 +21,6 @@
     <div class="gallery">
 
         <div *ngFor="let user of Users; let iControl=index" class="card">
-
             <div class="leftSideCard">
                 <div class="userPhoto">
                     <img src="assets\img\usuario.png" [routerLink]="['/', user.id, 'tasks']" class="pfp">
@@ -34,14 +33,13 @@
             </div>
 
             <div class="rightSideCard">
-                <!-- <div class="dropdown"> -->
                 <button (click)="toggleDropdown(user.id)" class="dropbtn">
                     <fa-icon [icon]="faEllipsisVertical" class="icon"></fa-icon>
                 </button>
                 <div class="myDropdown" [ngClass]="{'show': isDropdownOpen[user.id]}" class="dropdown-content">
-                    <button (click)="openEditUserModal('Edit User', user)">Edit</button>
-                    <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen[user.id]"
-                        (closeModal)="closeModal('Edit User', user.id)">
+                    <button (click)="openModal('Edit User', user)">Edit</button>
+                    <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen"
+                        (closeModal)="closeModal('Edit User')">
                         <form (ngSubmit)="updateUser()">
                             <label for="fname">First name:</label>
                             <input type="text" id="fname" name="fname" [(ngModel)]="userToUpdate.firstName"><br>
@@ -57,13 +55,12 @@
                     </app-modal>
 
                     <button (click)="openModal('Delete User', user)">Delete</button>
-                    <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen[user.id]"
-                        (closeModal)="closeModal('Delete User', user.id)">
+                    <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen"
+                        (closeModal)="closeModal('Delete User')">
 
                         <button (click)="deleteUser(Users[iControl]?.id)">YES </button>
-                        <button (click)="closeModal('Delete User', user.id)">NO</button>
+                        <button (click)="closeModal('Delete User')">NO</button>
                     </app-modal>
-
                 </div>
             </div>
         </div>
