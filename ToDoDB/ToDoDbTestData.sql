@@ -22,7 +22,7 @@ IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Walk the Dog'
 )
 --Si no existen, se agregan datos de prueba a la tabla Assignment (Nombre, descripcion, estado, y persona ligada)
 BEGIN
-	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Walk the Dog', 'Take the dog for a brisk walk', '2023-12-15 06:00:00.000', 1, 1)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Walk the Dog', 'Take the dog for a brisk walk', '2024-12-15 06:00:00.000', 1, 1)
 END
 GO
 
@@ -30,13 +30,13 @@ GO
 IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Grocery Shopping'
 )
 BEGIN
-	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Grocery Shopping', 'Compile a list of necessary groceries and head to the nearest supermarket or grocery store.', '2023-12-28 19:00:00.000', 2, 1)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Grocery Shopping', 'Compile a list of necessary groceries and head to the nearest supermarket or grocery store.', '2024-12-28 19:00:00.000', 2, 1)
 END
 GO
 
 IF NOT EXISTS(SELECT * FROM Assignment WHERE AssignmentName = 'Pay Bills'
 )
 BEGIN
-	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Pay Bills', 'Set aside time to review and pay outstanding bills.', '2023-12-25 20:30:00.000', 3, 3)
+	INSERT INTO Assignment(AssignmentName, AssignmentDescription, AssignmentDate, PersonId, StatusId) VALUES ('Pay Bills', 'Set aside time to review and pay outstanding bills.', '2024-12-25 20:30:00.000', 3, 3)
 END
 GO
