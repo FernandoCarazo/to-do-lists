@@ -2,17 +2,16 @@
     <div class="topTitle">
         <h1>User Management</h1>
         <button class="addUser" (click)="openModal('Create User')"> ADD USER + </button>
-        <app-modal [title]="modalTitle" [isOpen]="isCreateModalOpen" (closeModal)="closeModal('Create User')">
+        <app-modal [title]="modalTitle" [isOpen]="isCreateUserModalOpen" (closeModal)="closeModal('Create User')">
             <form (ngSubmit)="createUser()">
                 <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname" [(ngModel)]="userToCreate.firstName" required><br>
+                <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName" required><br>
 
                 <label for="lname">Last name:</label>
-                <input type="text" id="lname" name="lname" [(ngModel)]="userToCreate.lastName" required><br>
+                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName" required><br>
 
                 <label for="email">Email:</label>
-                <input type="text" id="email" name="email" [(ngModel)]="userToCreate.email" required><br>
-
+                <input type="text" id="email" name="email" [(ngModel)]="userVariable.email" required><br>
                 <input type="submit" value="Submit">
             </form>
         </app-modal>
@@ -33,22 +32,22 @@
             </div>
 
             <div class="rightSideCard">
-                <button (click)="toggleDropdown(user.id)" class="dropbtn">
+                <button (click)="toggleDropdown()" class="dropbtn">
                     <fa-icon [icon]="faEllipsisVertical" class="icon"></fa-icon>
                 </button>
-                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen[user.id]}" class="dropdown-content">
+                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen}" class="dropdown-content">
                     <button (click)="openModal('Edit User', user)">Edit</button>
                     <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen"
                         (closeModal)="closeModal('Edit User')">
                         <form (ngSubmit)="updateUser()">
                             <label for="fname">First name:</label>
-                            <input type="text" id="fname" name="fname" [(ngModel)]="userToUpdate.firstName"><br>
+                            <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName"><br>
 
                             <label for="lname">Last name:</label>
-                            <input type="text" id="lname" name="lname" [(ngModel)]="userToUpdate.lastName"><br><br>
+                            <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"><br><br>
 
                             <label for="email">Email:</label>
-                            <input type="text" id="email" name="email" [(ngModel)]="userToUpdate.email"><br>
+                            <input type="text" id="email" name="email" [(ngModel)]="userVariable.email"><br>
 
                             <input type="submit" value="Submit">
                         </form>

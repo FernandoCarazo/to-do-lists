@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CRUDService } from 'src/app/services/crud/crud.service';
 import { ActivatedRoute } from '@angular/router';
-import { task } from 'src/app/services/objects/task'; 
 import { Router } from '@angular/router';
-import { user } from 'src/app/services/objects/user';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
-
+import { Task } from 'src/app/api/tasks/task.model';
+import { Status } from 'src/app/api/status/status.model'; 
+import { User } from 'src/app/api/users/user.model';
 
 @Component({
   selector: 'app-tasks',
@@ -16,35 +16,36 @@ export class TasksPage {
   faPencil = faPencil;
 
   public id:string;
-  public userid:string;
-  public taskid: string;
-  public Tasks:task[] =[];
-  Users:user[]=[];
+  public Tasks:Task[] =[];
+  Users:User[]=[];
 
-  statusOptions: any[] = [
-    { id: 1, name: 'Active' },
-    { id: 2, name: 'Completed' },
-    { id: 3, name: 'Canceled' }
+  statusOptions: Status[] = [
+    { id: '1', status: 'Active' },
+    { id: '2', status: 'Completed' },
+    { id: '3', status: 'Canceled' }
   ];
 
-  groupedTasks: { [status: string]: task[] } = {
+  groupedTasks: { [status: string]: Task[] } = {
     'Active': [],
     'Completed': [],
     'Canceled': []
   };
 
-  taskToCreate: any = {
+  taskVariable: Task = {
+    id: '',
     assignmentName: '',
     assignmentDescription: '',
-    assignmentDate: ''
-  };
-
-  taskToUpdate: any = {
-    id:'',
-    assignmentName: '',
-    assignmentDescription: '',
-    assignmentDate: '',
-    StatusId: ''
+    assignmentDate: null,
+    status: {
+      id: '',
+      status: '',
+    },
+    user: {
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: ''
+    }
   };
 
   isCreateTaskModalOpen = false;
@@ -52,72 +53,114 @@ export class TasksPage {
   modalTitle: string = '';
 
 
-  openModal(modalType: string, task?: task, userId?: string) {
+  openModal(modalType: string, task?: Task, user?: User) {
     this.modalTitle = modalType;
 
     if(modalType === 'Create Task'){
-      this.userid = userId;
+      this.taskVariable = {
+        id: '',
+        assignmentName: '',
+        assignmentDescription: '',
+        assignmentDate: null,
+        status: {
+          id: '',
+          status: '',
+        },
+        user: {
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: ''
+        }
+      };
       this.isCreateTaskModalOpen = true;      
     }
     else if (modalType === 'Edit Task') {
-      this.userid = userId;
-      this.taskToUpdate = {
+      this.taskVariable = {
         id: task.id,
         assignmentName: task.assignmentName,
         assignmentDescription: task.assignmentDescription,
         assignmentDate: task.assignmentDate,
-        StatusId: task.status.id,
+        status: task.status,
+        user: user
       };
       this.isEditTaskModalOpen = true;
     }
   }
 
-  closeModal(modalType: string, taskId?: string) {
+  closeModal(modalType: string) {
     if(modalType === 'Create Task'){
       this.isCreateTaskModalOpen = false;
      }   
-     else if (modalType === 'Edit Task' && taskId) {
+     else if (modalType === 'Edit Task') {
       this.isEditTaskModalOpen = false;
-
     }   
   }
 
   createTask() {
-    this.crudService.createTask(this.taskToCreate, this.userid).subscribe({
-      next: (response) => {
-        console.log('Task created:', response);
-        this.taskToCreate = {
-          assignmentName: '',
-          assignmentDescription: '',
-          assignmentDate: ''
-        };
-        this.userid='';
-        window.location.reload();
+    let TaskCreate: Task;
+    TaskCreate = new Task(this.taskVariable);
 
-      },
-      error: (error) => {
-        // Handle errors, e.g., show an error message.
-        console.error('Error creating user:', error);
-        console.log(this.taskToCreate);
+    this.crudService.createTask(TaskCreate, TaskCreate.user.id).subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        if(!response.success){
+          alert(response.messages.join('\n'));
+        }
+        else{
+          this.taskVariable = {
+            id: '',
+            assignmentName: '',
+            assignmentDescription: '',
+            assignmentDate: null,
+            status: {
+              id: '',
+              status: '',
+            },
+            user: {
+              id: '',
+              firstName: '',
+              lastName: '',
+              email: ''
+            }
+          };
+          window.location.reload();
+        }      
       }
     });
   }
 
-  updateTask() {
-    this.crudService.updateTask(this.taskToUpdate, this.userid, this.taskToUpdate.id).subscribe(response => {
-      console.log('Task updated successfully', response);
-      console.log(this.taskToUpdate.status);
+  updateTask(task?: Task, user?: User) {
+    let TaskUpdate: Task;
+    TaskUpdate = new Task(this.taskVariable);
+    
+    this.crudService.updateTask(TaskUpdate, TaskUpdate.user.id, TaskUpdate.id).subscribe({
+      next: (response) => {
+      console.log('Response:', response);
 
-      this.isEditTaskModalOpen= false;
-      this.taskToUpdate = {
-        id:'',
-        assignmentName: '',
-        assignmentDescription: '',
-        assignmentDate: '',
-        StatusId: ''
-      };
-      this.userid='';
-       window.location.reload();
+      if(!response.success){
+        alert(response.messages.join('\n'));
+      }
+      else{
+        this.isEditTaskModalOpen= false;
+        this.taskVariable = {
+          id: '',
+          assignmentName: '',
+          assignmentDescription: '',
+          assignmentDate: null,
+          status: {
+            id: '',
+            status: '',
+          },
+          user: {
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: ''
+          }
+        };
+        window.location.reload();
+      }}      
     });
   }
 
@@ -127,7 +170,7 @@ export class TasksPage {
       'Completed': [],
       'Canceled': []
     };
-  
+
     this.Tasks.forEach(task => {
       switch (task.status.status) {
         case 'Active':
@@ -138,9 +181,6 @@ export class TasksPage {
           break;
         case 'Canceled':
           this.groupedTasks['Canceled'].push(task);
-          break;
-        default:
-          // Handle other status values if needed
           break;
       }
     });
@@ -153,9 +193,9 @@ export class TasksPage {
         case 'Completed':
         return '#27d948'; // Set the color for completed tasks
         case 'Canceled':
-        return '#d92727'; // Set the color for canceled tasks
+        return '#d92727'; 
       default:
-        return '#4772fd'; // Default color for unknown status
+        return '#4772fd'; 
     }
   }
 
@@ -174,8 +214,7 @@ export class TasksPage {
       
       this.crudService.GetTasks(this.id).subscribe(result=>{
         this.Tasks = result.data;
-        this.groupTasksByStatus();
-        console.log("All Tasks:", this.Tasks);  
+        this.groupTasksByStatus(); 
       });
       
     }
