@@ -1,23 +1,22 @@
 <div class="padding">
     <div class="topTitle">
         <h1>Task Management</h1>
-        <button class="addTask" (click)="openModal('Create Task', null, Users[0].id )
+        <button class="addTask" (click)="openModal('Create Task')
         
         ">ADD TASK + </button>
         <app-modal [title]="modalTitle" [isOpen]="isCreateTaskModalOpen" (closeModal)="closeModal('Create Task')">
             <form (ngSubmit)="createTask()">
                 <label for="aname">Task name:</label>
-                <input type="text" id="aname" name="aname" [(ngModel)]="taskToCreate.assignmentName" /><br>
+                <input type="text" id="aname" name="aname" [(ngModel)]="taskVariable.assignmentName" /><br>
 
                 <label for="adesc">Task Description:</label>
-                <input type="text" id="adesc" name="adesc" [(ngModel)]="taskToCreate.assignmentDescription"
-                    required><br>
+                <input type="text" id="adesc" name="adesc" [(ngModel)]="taskVariable.assignmentDescription"><br>
 
                 <label for="date">Date:</label>
-                <input type="datetime-local" id="date" name="date" [(ngModel)]="taskToCreate.assignmentDate"
-                    required><br>
+                <input type="datetime-local" id="date" name="date" [(ngModel)]="taskVariable.assignmentDate"><br>
 
                 <input type="submit" value="Submit">
+
             </form>
         </app-modal>
     </div>
@@ -55,34 +54,34 @@
                                 <h3>{{task.assignmentName}}</h3>
                                 <h4>{{task.assignmentDescription}}</h4>
                                 <h4>{{task.assignmentDate}}</h4>
-                                <h4>{{task.status.status}}</h4>
                             </div>
                         </div>
 
                         <div class="rightSideCard">
-                            <button (click)="openModal('Edit Task', task, Users[0].id)" class="dropbtn">
+                            <button (click)="openModal('Edit Task', task,  Users[0])" class="dropbtn">
                                 <fa-icon [icon]="faPencil" class="icon"></fa-icon>
                             </button>
 
                             <app-modal [title]="modalTitle" [isOpen]="isEditTaskModalOpen"
-                                (closeModal)="closeModal('Edit Task', task.id)">
+                                (closeModal)="closeModal('Edit Task')">
 
-                                <form (ngSubmit)="updateTask()">
+                                <form (ngSubmit)="updateTask(task, Users[0])">
                                     <label for="aname">Task name:</label>
                                     <input type="text" id="aname" name="aname"
-                                        [(ngModel)]="taskToUpdate.assignmentName"><br>
+                                        [(ngModel)]="taskVariable.assignmentName"><br>
 
                                     <label for="adesc">Task Description:</label>
                                     <input type="text" id="adesc" name="adesc"
-                                        [(ngModel)]="taskToUpdate.assignmentDescription"><br><br>
+                                        [(ngModel)]="taskVariable.assignmentDescription"><br><br>
 
                                     <label for="date">Date:</label>
                                     <input type="datetime-local" id="date" name="date"
-                                        [(ngModel)]="taskToUpdate.assignmentDate"><br>
+                                        [(ngModel)]="taskVariable.assignmentDate"><br>
 
                                     <label for="status">Status:</label>
-                                    <select id="status" name="status" [(ngModel)]="taskToUpdate.StatusId">
-                                        <option *ngFor="let option of statusOptions" [value]="option.id">{{ option.name
+                                    <select id="status" name="status" [(ngModel)]="taskVariable.status.id">
+                                        <option *ngFor="let option of statusOptions" [value]="option.id">{{
+                                            option.status
                                             }}
                                         </option>
                                     </select>

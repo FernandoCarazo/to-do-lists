@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { user } from '../objects/user';
-import { task } from '../objects/task';
+import { User } from 'src/app/api/users/user.model';
+import { CreateUpdateTaskDTO } from '../../api/tasks/task.dto';
+import { Task } from 'src/app/api/tasks/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,9 @@ import { task } from '../objects/task';
 export class CRUDService {
   API: string='https://localhost:7158/api/persons/'
 
-
-
   constructor(private clienteHttp:HttpClient) { };
 
-  GetUsers(): Observable<any>{
+  GetUsers(): Observable<any> {
     return this.clienteHttp.get(this.API);
   }
 
@@ -22,14 +21,16 @@ export class CRUDService {
     return this.clienteHttp.get(this.API +id);
   }
 
-  createUser(user: user): Observable<any> {
+  createUser(user: User): Observable<any> {
     return this.clienteHttp.post(this.API, user);
   }
 
-  updateUser(userToUpdate: user, userid:string) {
+
+
+  updateUser(userToUpdate: User, userid:string) : Observable<any>{
     // Construct the URL with the user's ID, but ensure there's no extra trailing slash
     const url = `${this.API}${userid}`;
-    return this.clienteHttp.put<user>(url, userToUpdate);
+    return this.clienteHttp.put<User>(url, userToUpdate);
   }
 
   deleteUser(userId: string): Observable<any> {
@@ -40,15 +41,16 @@ export class CRUDService {
     return this.clienteHttp.get(this.API+ id + "/tasks");
   } 
 
-  createTask(task: task, userId: string): Observable<any> {
+  createTask(task: Task, userId: string): Observable<any> {
     return this.clienteHttp.post(this.API+ userId + "/tasks", task);
   }
-
-  updateTask(taskToUpdate: task, userId: string, taskId:string) {
+  
+  updateTask(taskToUpdate: Task, userId: string, taskId:string) : Observable<any> {
     const url = `${this.API}${userId}/tasks/${taskId}`;
-    console.log("user:" + userId);
-    console.log("task" + taskId)
-    return this.clienteHttp.put<task>(url, taskToUpdate);
+    console.log('CRUD SERVCICE', taskToUpdate.status)
+    let blublu =new CreateUpdateTaskDTO(taskToUpdate)
+    console.log('blublu',blublu)
+    return this.clienteHttp.put(url, blublu);
   }
 
 

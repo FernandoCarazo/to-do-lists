@@ -1,26 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener } from '@angular/core';
 import { CRUDService } from 'src/app/services/crud/crud.service';
 import { ActivatedRoute } from '@angular/router';
-import { user } from 'src/app/services/objects/user';
+// import { user } from 'src/app/services/objects/user';
 import { Router } from '@angular/router';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { User } from 'src/app/api/users/user.model';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.page.html',
-  styleUrls: ['./users.page.css']
+  styleUrls: ['./users.page.css'],
+  host: {
+    '(document:click)': 'onClick($event)',
+  },
 })
-
 export class UsersPage {
   faEllipsisVertical = faEllipsisVertical;
-  Users:user[];
-  
-  userToCreate: any = {
-    firstName: '',
-    lastName: '',
-    email: ''
-  };
-  userToUpdate: any = {
+  Users:User[];
+
+  userVariable: User = {
+    id: '',
     firstName: '',
     lastName: '',
     email: ''
@@ -28,26 +27,33 @@ export class UsersPage {
 
    userid:string;
    modalTitle: string = "";
-   isCreateModalOpen = false;
+   isCreateUserModalOpen = false;
    isEditUserModalOpen= false;
    isDeleteUserModalOpen = false;
 
-   isDropdownOpen: { [key: string]: boolean } = {};   
-   lastOpenedDropdownId: string | null = null;
+  //  isDropdownOpen: { [key: string]: boolean } = {};   
+  //  lastOpenedDropdownId: string | null = null;
 
+  isDropdownOpen = false;
 
-   openModal(modalType: string, user?: user) {
+   openModal(modalType: string, user?: User) {
     this.modalTitle = modalType;
 
     if(modalType === 'Create User') {
-     this.isCreateModalOpen = true;
+     this.isCreateUserModalOpen = true;
+     this.userVariable = {
+      id: '',
+      firstName: '', 
+      lastName: '',
+      email: '',
+    };
     } 
     else if(modalType === 'Edit User') {
       this.isEditUserModalOpen = true;
       this.modalTitle = modalType;
-      this.userid = user.id;
-      this.userToUpdate = {
-        firstName: user.firstName, // You can set initial values if needed
+        this.userVariable = {
+        id: user.id,
+        firstName: user.firstName, 
         lastName: user.lastName,
         email: user.email,
       };
@@ -59,7 +65,7 @@ export class UsersPage {
  
    closeModal(modalType: string) {
     if(modalType === 'Create User'){
-      this.isCreateModalOpen = false;
+      this.isCreateUserModalOpen = false;
      }   
      else if(modalType === 'Edit User'){
         this.isEditUserModalOpen=false;
@@ -69,41 +75,56 @@ export class UsersPage {
     }
    }
 
-   toggleDropdown(userId: string): void {
-    if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
-      // Close the last opened dropdown if a different one is clicked
-      this.isDropdownOpen[this.lastOpenedDropdownId] = false;
-    }
-    // Toggle the dropdown for the current user
-    this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
-    // Update the last opened dropdown ID
-    this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
-  }
+  //  toggleDropdown(userId: string): void {
+  //   if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
+  //     // Close the last opened dropdown if a different one is clicked
+  //     this.isDropdownOpen[this.lastOpenedDropdownId] = false;
+  //   }
+  //   // Toggle the dropdown for the current user
+  //   this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
+  //   // Update the last opened dropdown ID
+  //   this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
+  // }
 
    createUser() {
-    this.crudService.createUser(this.userToCreate).subscribe({
+    this.crudService.createUser(this.userVariable).subscribe({
       next: (response) => {
-        console.log('User created:', response);
-        this.userToCreate = {
-          firstName: '',
-          lastName: '',
-          email: ''
-        };
-         window.location.reload();
-      },
-      error: (error) => {
-        // Handle errors, e.g., show an error message.
-        console.error('Error creating user:', error);
+        console.log('Response:', response);
+        if(!response.success){
+          alert(response.messages.join('\n'));
+        }
+        else{
+          this.userVariable = {
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: ''
+          };
+          window.location.reload();
+        }
       }
     });
   }
 
   updateUser() {
-    this.crudService.updateUser(this.userToUpdate, this.userid).subscribe(response => {
-      console.log('User updated successfully', response);
-      this.isEditUserModalOpen = false;
-      window.location.reload();
-    });
+    this.crudService.updateUser(this.userVariable, this.userVariable.id).subscribe({
+      next: (response) => {
+        console.log(response);
+
+        if(!response.success){
+          alert(response.messages.join('\n'));
+        }
+        else{
+          this.userVariable = {
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: ''
+          };
+          window.location.reload();
+        }
+      }
+    })
   }
 
   deleteUser(userId: string) {
@@ -122,8 +143,23 @@ export class UsersPage {
 
   constructor(private router: Router, 
     private route: ActivatedRoute, 
-    private crudService: CRUDService) {
+    private crudService: CRUDService, private elementRef: ElementRef) {
 
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeDropdown();
+    }
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
   }
 
   ngOnInit(): void {
