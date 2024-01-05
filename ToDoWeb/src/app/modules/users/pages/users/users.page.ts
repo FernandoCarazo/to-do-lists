@@ -10,9 +10,7 @@ import { User } from 'src/app/api/users/user.model';
   selector: 'app-users',
   templateUrl: './users.page.html',
   styleUrls: ['./users.page.css'],
-  host: {
-    '(document:click)': 'onClick($event)',
-  },
+
 })
 export class UsersPage {
   faEllipsisVertical = faEllipsisVertical;
@@ -31,10 +29,10 @@ export class UsersPage {
    isEditUserModalOpen= false;
    isDeleteUserModalOpen = false;
 
-  //  isDropdownOpen: { [key: string]: boolean } = {};   
-  //  lastOpenedDropdownId: string | null = null;
+   isDropdownOpen: { [key: string]: boolean } = {};   
+   lastOpenedDropdownId: string | null = null;
 
-  isDropdownOpen = false;
+  // isDropdownOpen = false;
 
    openModal(modalType: string, user?: User) {
     this.modalTitle = modalType;
@@ -75,16 +73,16 @@ export class UsersPage {
     }
    }
 
-  //  toggleDropdown(userId: string): void {
-  //   if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
-  //     // Close the last opened dropdown if a different one is clicked
-  //     this.isDropdownOpen[this.lastOpenedDropdownId] = false;
-  //   }
-  //   // Toggle the dropdown for the current user
-  //   this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
-  //   // Update the last opened dropdown ID
-  //   this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
-  // }
+   toggleDropdown(userId: string): void {
+    if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
+      // Close the last opened dropdown if a different one is clicked
+      this.isDropdownOpen[this.lastOpenedDropdownId] = false;
+    }
+    // Toggle the dropdown for the current user
+    this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
+    // Update the last opened dropdown ID
+    this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
+  }
 
    createUser() {
     this.crudService.createUser(this.userVariable).subscribe({
@@ -147,20 +145,15 @@ export class UsersPage {
 
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.closeDropdown();
-    }
-  }
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
 
-  closeDropdown() {
-    this.isDropdownOpen = false;
-  }
+  // toggleDropdown() {
+  //   this.isDropdownOpen = !this.isDropdownOpen;
+  // }
+
+  // closeDropdown() {
+  //   this.isDropdownOpen = false;
+  // }
 
   ngOnInit(): void {
     this.crudService.GetUsers().subscribe(result=>{

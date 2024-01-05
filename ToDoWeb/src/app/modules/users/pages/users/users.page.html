@@ -32,36 +32,38 @@
             </div>
 
             <div class="rightSideCard">
-                <button (click)="toggleDropdown()" class="dropbtn">
+
+                <button (click)="toggleDropdown(user.id)" class="dropbtn">
                     <fa-icon [icon]="faEllipsisVertical" class="icon"></fa-icon>
                 </button>
-                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen}" class="dropdown-content">
-                    <button (click)="openModal('Edit User', user)">Edit</button>
-                    <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen"
-                        (closeModal)="closeModal('Edit User')">
-                        <form (ngSubmit)="updateUser()">
-                            <label for="fname">First name:</label>
-                            <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName"><br>
+                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen[user.id]}" class="dropdown-content">
+                    <div class="myDropdown" [ngClass]="{'show': isDropdownOpen}" class="dropdown-content">
+                        <button (click)="openModal('Edit User', user)">Edit</button>
+                        <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen"
+                            (closeModal)="closeModal('Edit User')">
+                            <form (ngSubmit)="updateUser()">
+                                <label for="fname">First name:</label>
+                                <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName"><br>
 
-                            <label for="lname">Last name:</label>
-                            <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"><br><br>
+                                <label for="lname">Last name:</label>
+                                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"><br><br>
 
-                            <label for="email">Email:</label>
-                            <input type="text" id="email" name="email" [(ngModel)]="userVariable.email"><br>
+                                <label for="email">Email:</label>
+                                <input type="text" id="email" name="email" [(ngModel)]="userVariable.email"><br>
 
-                            <input type="submit" value="Submit">
-                        </form>
-                    </app-modal>
+                                <input type="submit" value="Submit">
+                            </form>
+                        </app-modal>
 
-                    <button (click)="openModal('Delete User', user)">Delete</button>
-                    <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen"
-                        (closeModal)="closeModal('Delete User')">
+                        <button (click)="openModal('Delete User', user)">Delete</button>
+                        <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen"
+                            (closeModal)="closeModal('Delete User')">
 
-                        <button (click)="deleteUser(Users[iControl]?.id)">YES </button>
-                        <button (click)="closeModal('Delete User')">NO</button>
-                    </app-modal>
+                            <button (click)="deleteUser(Users[iControl]?.id)">YES </button>
+                            <button (click)="closeModal('Delete User')">NO</button>
+                        </app-modal>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
