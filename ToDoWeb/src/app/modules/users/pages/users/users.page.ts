@@ -1,10 +1,17 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
-import { CRUDService } from 'src/app/services/crud/crud.service';
+import { Component, ElementRef, Output, EventEmitter } from '@angular/core';
+import { UserApi } from 'src/app/api/users/user.api';
 import { ActivatedRoute } from '@angular/router';
-// import { user } from 'src/app/services/objects/user';
 import { Router } from '@angular/router';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { User } from 'src/app/api/users/user.model';
+
+class ExpandableUser extends User{
+  public expanded: boolean;
+  constructor(data: any = null){
+    super(data);
+    this.expanded=false
+  }
+}
 
 @Component({
   selector: 'app-users',
@@ -13,28 +20,38 @@ import { User } from 'src/app/api/users/user.model';
 
 })
 export class UsersPage {
-  faEllipsisVertical = faEllipsisVertical;
-  Users:User[];
+  @Output() closingDropdown = new EventEmitter<void>();
 
-  userVariable: User = {
+  public faEllipsisVertical = faEllipsisVertical;
+  public users: ExpandableUser[];
+  public userid: string;
+  public modalTitle: string = "";
+  public isCreateUserModalOpen = false;
+  public isEditUserModalOpen = false;
+  public isDeleteUserModalOpen = false;
+  public expandedUser: ExpandableUser;
+  public isDropdownOpen: { [key: string]: boolean } = {};   
+  public lastOpenedDropdownId: string | null = null;
+
+  public userVariable: User = {
     id: '',
     firstName: '',
     lastName: '',
     email: ''
   };
 
-   userid:string;
-   modalTitle: string = "";
-   isCreateUserModalOpen = false;
-   isEditUserModalOpen= false;
-   isDeleteUserModalOpen = false;
+  constructor(private router: Router, 
+    private route: ActivatedRoute, 
+    private userAPI: UserApi, private elementRef: ElementRef) {
 
-   isDropdownOpen: { [key: string]: boolean } = {};   
-   lastOpenedDropdownId: string | null = null;
+  }
 
-  // isDropdownOpen = false;
-
-   openModal(modalType: string, user?: User) {
+  public ngOnInit(): void {
+    this.userAPI.GetUsers().subscribe(result=>{
+      this.users = result.data.map((user: any)=>new ExpandableUser(user));
+    })
+  }
+  public openModal(modalType: string, user?: User) {
     this.modalTitle = modalType;
 
     if(modalType === 'Create User') {
@@ -61,7 +78,7 @@ export class UsersPage {
     }   
     }
  
-   closeModal(modalType: string) {
+    public closeModal(modalType: string) {
     if(modalType === 'Create User'){
       this.isCreateUserModalOpen = false;
      }   
@@ -73,19 +90,30 @@ export class UsersPage {
     }
    }
 
-   toggleDropdown(userId: string): void {
-    if (this.lastOpenedDropdownId && this.lastOpenedDropdownId !== userId) {
-      // Close the last opened dropdown if a different one is clicked
-      this.isDropdownOpen[this.lastOpenedDropdownId] = false;
+   public toggleDropdown(expandedUser: ExpandableUser){
+    if(this.expandedUser!= expandedUser && this.expandedUser != null){     
+        this.expandedUser.expanded = false;
     }
-    // Toggle the dropdown for the current user
-    this.isDropdownOpen[userId] = !this.isDropdownOpen[userId];
-    // Update the last opened dropdown ID
-    this.lastOpenedDropdownId = this.isDropdownOpen[userId] ? userId : null;
+
+    if(expandedUser.expanded){
+      expandedUser.expanded=false;
+      this.expandedUser=null;
+    }else{
+      expandedUser.expanded = true;
+      this.expandedUser = expandedUser;
+    }
   }
 
-   createUser() {
-    this.crudService.createUser(this.userVariable).subscribe({
+  public closeDropdown(){
+      if(this.expandedUser != null){
+        this.expandedUser.expanded = false;
+        this.expandedUser = null;
+      }
+  }
+
+
+  public createUser() {
+    this.userAPI.CreateUser(this.userVariable).subscribe({
       next: (response) => {
         console.log('Response:', response);
         if(!response.success){
@@ -104,8 +132,8 @@ export class UsersPage {
     });
   }
 
-  updateUser() {
-    this.crudService.updateUser(this.userVariable, this.userVariable.id).subscribe({
+  public updateUser() {
+    this.userAPI.UpdateUser(this.userVariable, this.userVariable.id).subscribe({
       next: (response) => {
         console.log(response);
 
@@ -125,8 +153,8 @@ export class UsersPage {
     })
   }
 
-  deleteUser(userId: string) {
-    this.crudService.deleteUser(userId).subscribe({
+  public deleteUser(userId: string) {
+    this.userAPI.DeleteUser(userId).subscribe({
       next: (response) => {
         console.log(userId);
         console.log('User deleted successfully', response);
@@ -138,27 +166,4 @@ export class UsersPage {
       },
     });
   }
-
-  constructor(private router: Router, 
-    private route: ActivatedRoute, 
-    private crudService: CRUDService, private elementRef: ElementRef) {
-
-  }
-
-
-
-  // toggleDropdown() {
-  //   this.isDropdownOpen = !this.isDropdownOpen;
-  // }
-
-  // closeDropdown() {
-  //   this.isDropdownOpen = false;
-  // }
-
-  ngOnInit(): void {
-    this.crudService.GetUsers().subscribe(result=>{
-      this.Users = result.data;
-      console.log(result)
-    })
-}
 }

@@ -17,9 +17,10 @@ export class Task {
         this.id = data.id ? data.id : null;
         this.assignmentName = data.assignmentName ? data.assignmentName : null;
         this.assignmentDescription = data.assignmentDescription ? data.assignmentDescription : null;
+        console.log('assignmentDate',this.assignmentDate);
         this.assignmentDate = data.assignmentDate ? new Date(data.assignmentDate) : null;
-        this.status = data.status ? data.status : null;
-        this.user = data.user ? data.user : null;
+        this.status = new Status(data.status);
+        this.user = new User(data.user);
     }
 }
 

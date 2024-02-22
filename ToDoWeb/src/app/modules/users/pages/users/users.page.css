@@ -41,8 +41,47 @@ h1 {
     background-color: transparent;
 }
 
+form {
+    width: 70%;
+}
+
 input {
     margin-bottom: 5px;
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 3px;
+}
+
+input.submit {
+    margin-top: 5px;
+    width: 100%;
+    height: 2.2rem;
+    background-color: #4772fd;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+input.submit:hover {
+    cursor: pointer;
+}
+
+::placeholder {
+    opacity: 1;
+}
+
+input:focus::placeholder {
+    opacity: 0.6;
+}
+
+.deleteModal button {
+    height: 5rem;
+    width: 3rem;
+    border-radius: 8px;
+    margin: 4px;
 }
 
 .card {
@@ -63,7 +102,7 @@ input {
 
 .leftSideCard {
     text-align: left;
-    width: 70%;
+    width: 80%;
     height: 100%;
 }
 
@@ -83,7 +122,7 @@ input {
 }
 
 .rightSideCard {
-    width: 30%;
+    width: 10%;
     height: 100%;
 }
 
@@ -95,19 +134,22 @@ input {
     color: white;
     opacity: 0.5;
     display: block;
-    margin-top: 50%;
+    margin-top: 150%;
     margin-left: 70%;
 }
 
-.myDropdown {
-    background-color: aquamarine;
+.dropdown {
+    background-color: blue;
 }
 
 .dropdown-content {
+    display: none;
+}
+
+.dropdown-content.show {
     margin-top: 10px;
     margin-left: 15px;
     background-color: transparent;
-    display: none;
     overflow: auto;
     z-index: 2;
     flex-direction: column;
@@ -115,6 +157,11 @@ input {
     width: 80px;
     margin: 0;
     margin: auto;
+}
+
+.droped {
+    width: 30%;
+    height: 30%;
 }
 
 .dropdown-content button {
@@ -130,16 +177,16 @@ input {
     opacity: 1;
 }
 
+.show {
+    display: block;
+}
+
 .dropbtn:hover {
     opacity: 1;
 }
 
 .addUser:hover {
     background: var(--main-hover-background);
-}
-
-.show {
-    display: block;
 }
 
 .pfp:hover {

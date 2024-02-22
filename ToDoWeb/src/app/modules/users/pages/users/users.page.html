@@ -4,22 +4,19 @@
         <button class="addUser" (click)="openModal('Create User')"> ADD USER + </button>
         <app-modal [title]="modalTitle" [isOpen]="isCreateUserModalOpen" (closeModal)="closeModal('Create User')">
             <form (ngSubmit)="createUser()">
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName" required><br>
-
-                <label for="lname">Last name:</label>
-                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName" required><br>
-
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" [(ngModel)]="userVariable.email" required><br>
-                <input type="submit" value="Submit">
+                <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName"
+                    placeholder="First name"><br>
+                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"
+                    placeholder="Last name"><br>
+                <input type="text" id="email" name="email" [(ngModel)]="userVariable.email" placeholder="Email"><br>
+                <input class="submit" type="submit" value="Submit">
             </form>
         </app-modal>
     </div>
-
     <div class="gallery">
 
-        <div *ngFor="let user of Users; let iControl=index" class="card">
+        <div *ngFor="let user of users; let iControl=index" class="card">
+
             <div class="leftSideCard">
                 <div class="userPhoto">
                     <img src="assets\img\usuario.png" [routerLink]="['/', user.id, 'tasks']" class="pfp">
@@ -33,11 +30,12 @@
 
             <div class="rightSideCard">
 
-                <button (click)="toggleDropdown(user.id)" class="dropbtn">
+                <button (click)="toggleDropdown(user)" class="dropbtn">
                     <fa-icon [icon]="faEllipsisVertical" class="icon"></fa-icon>
                 </button>
-                <div class="myDropdown" [ngClass]="{'show': isDropdownOpen[user.id]}" class="dropdown-content">
-                    <div class="myDropdown" [ngClass]="{'show': isDropdownOpen}" class="dropdown-content">
+
+                <div class="dropdown">
+                    <div class="dropdown-content" [ngClass]="{'show': user.expanded}">
                         <button (click)="openModal('Edit User', user)">Edit</button>
                         <app-modal [title]="modalTitle" [isOpen]="isEditUserModalOpen"
                             (closeModal)="closeModal('Edit User')">
@@ -46,24 +44,27 @@
                                 <input type="text" id="fname" name="fname" [(ngModel)]="userVariable.firstName"><br>
 
                                 <label for="lname">Last name:</label>
-                                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"><br><br>
+                                <input type="text" id="lname" name="lname" [(ngModel)]="userVariable.lastName"><br>
 
                                 <label for="email">Email:</label>
                                 <input type="text" id="email" name="email" [(ngModel)]="userVariable.email"><br>
 
-                                <input type="submit" value="Submit">
+                                <input class="submit" type="submit" value="Submit">
                             </form>
                         </app-modal>
 
                         <button (click)="openModal('Delete User', user)">Delete</button>
                         <app-modal [title]="modalTitle" [isOpen]="isDeleteUserModalOpen"
-                            (closeModal)="closeModal('Delete User')">
+                            (closeModal)="closeModal('Delete User')" class="deleteModal">
 
-                            <button (click)="deleteUser(Users[iControl]?.id)">YES </button>
+                            <button (click)="deleteUser(users[iControl]?.id)">YES</button>
                             <button (click)="closeModal('Delete User')">NO</button>
                         </app-modal>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </div>
+</div>

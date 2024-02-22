@@ -42,15 +42,16 @@ export class CRUDService {
   } 
 
   createTask(task: Task, userId: string): Observable<any> {
-    return this.clienteHttp.post(this.API+ userId + "/tasks", task);
+    let data = new CreateUpdateTaskDTO(task);
+    console.log(userId);
+
+    return this.clienteHttp.post(this.API+ userId + "/tasks", data);
   }
   
   updateTask(taskToUpdate: Task, userId: string, taskId:string) : Observable<any> {
     const url = `${this.API}${userId}/tasks/${taskId}`;
-    console.log('CRUD SERVCICE', taskToUpdate.status)
-    let blublu =new CreateUpdateTaskDTO(taskToUpdate)
-    console.log('blublu',blublu)
-    return this.clienteHttp.put(url, blublu);
+    let data = new CreateUpdateTaskDTO(taskToUpdate)
+    return this.clienteHttp.put(url, data);
   }
 
 

@@ -6,16 +6,20 @@
         ">ADD TASK + </button>
         <app-modal [title]="modalTitle" [isOpen]="isCreateTaskModalOpen" (closeModal)="closeModal('Create Task')">
             <form (ngSubmit)="createTask()">
-                <label for="aname">Task name:</label>
-                <input type="text" id="aname" name="aname" [(ngModel)]="taskVariable.assignmentName" /><br>
+                <input type="text" id="aname" name="aname" [(ngModel)]="taskVariable.assignmentName"
+                    placeholder="Task name" /><br>
 
-                <label for="adesc">Task Description:</label>
-                <input type="text" id="adesc" name="adesc" [(ngModel)]="taskVariable.assignmentDescription"><br>
+                <input type="text" id="adesc" name="adesc" [(ngModel)]="taskVariable.assignmentDescription"
+                    placeholder="Task Description "><br>
 
-                <label for="date">Date:</label>
-                <input type="datetime-local" id="date" name="date" [(ngModel)]="taskVariable.assignmentDate"><br>
+                <input type="datetime-local" id="date" name="date" [(ngModel)]="taskVariable.assignmentDate"
+                    placeholder="Task Description name"><br>
 
-                <input type="submit" value="Submit">
+                <!-- <input type="datetime-local" id="date" name="date"
+                    [ngModel]="taskVariable.assignmentDate?.toInputDateString()"
+                    (ngModelChange)="setAssignmentDate($event)"><br> -->
+
+                <input class="submit" type="submit" value="Submit">
 
             </form>
         </app-modal>
@@ -28,8 +32,8 @@
                 </div>
 
                 <div class="userInfo">
-                    <h4>{{Users[0]?.firstName + " " + Users[0]?.lastName}}</h4>
-                    <h5>{{Users[0]?.email}}</h5>
+                    <h4>{{user?.firstName + " " + user?.lastName}}</h4>
+                    <h5>{{user?.email}}</h5>
                 </div>
             </div>
         </div>
@@ -53,39 +57,42 @@
                             <div class="taskInfo">
                                 <h3>{{task.assignmentName}}</h3>
                                 <h4>{{task.assignmentDescription}}</h4>
-                                <h4>{{task.assignmentDate}}</h4>
+                                <h4>
+                                    {{task.assignmentDate | date: 'dd/MM/yyyy hh:mm a' }}
+                                </h4>
                             </div>
                         </div>
 
                         <div class="rightSideCard">
-                            <button (click)="openModal('Edit Task', task,  Users[0])" class="dropbtn">
+                            <button (click)="openModal('Edit Task', task)" class="dropbtn">
                                 <fa-icon [icon]="faPencil" class="icon"></fa-icon>
                             </button>
 
                             <app-modal [title]="modalTitle" [isOpen]="isEditTaskModalOpen"
                                 (closeModal)="closeModal('Edit Task')">
 
-                                <form (ngSubmit)="updateTask(task, Users[0])">
+                                <form (ngSubmit)="updateTask()">
                                     <label for="aname">Task name:</label>
                                     <input type="text" id="aname" name="aname"
                                         [(ngModel)]="taskVariable.assignmentName"><br>
 
                                     <label for="adesc">Task Description:</label>
-                                    <input type="text" id="adesc" name="adesc"
-                                        [(ngModel)]="taskVariable.assignmentDescription"><br><br>
+                                    <input type="text" id="adesc" name="adesc" class="description"
+                                        [(ngModel)]="taskVariable.assignmentDescription"><br>
 
                                     <label for="date">Date:</label>
                                     <input type="datetime-local" id="date" name="date"
                                         [(ngModel)]="taskVariable.assignmentDate"><br>
 
-                                    <label for="status">Status:</label>
+                                    <label for="status">Status:</label><br>
                                     <select id="status" name="status" [(ngModel)]="taskVariable.status.id">
+                                        <br>
                                         <option *ngFor="let option of statusOptions" [value]="option.id">{{
                                             option.status
                                             }}
                                         </option>
                                     </select>
-                                    <input type="submit" value="Submit">
+                                    <input class="submit" type="submit" value="Submit">
                                 </form>
                             </app-modal>
                         </div>
