@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {HttpClientModule} from '@angular/common/http'; 
 import { UsersModule } from './modules/users/users.module';
 import { SharedModule } from '@shared/shared.module';
+import '@extensions/date';
 
 
 

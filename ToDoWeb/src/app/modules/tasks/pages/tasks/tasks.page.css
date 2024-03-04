@@ -144,18 +144,64 @@ h3 {
     height: 100%;
 }
 
-input #adesc {
-    height: 3rem;
+form {
+
+    width: 70%;
 }
+
+input {
+    margin-bottom: 5px;
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 3px;
+}
+
+select {
+    width: 100%;
+}
+
+input.submit {
+    margin-top: 5px;
+    margin-bottom: 20px;
+
+    width: 100%;
+    height: 2.2rem;
+    background-color: #4772fd;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: none;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    border: none;
+}
+
+::placeholder {
+    opacity: 1;
+}
+
+input:focus::placeholder {
+    opacity: 0.6;
+}
+
+fa-icon#alertIcon {
+    color: red;
+
+}
+
+input.submit:hover {
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+
 
 .TaskCard:hover {
     opacity: 1;
-
 }
 
 .dropbtn:hover {
     opacity: 1;
-
 }
 
 .dropbtn {

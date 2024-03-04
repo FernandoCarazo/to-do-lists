@@ -11,9 +11,7 @@ export class MainLayout {
   constructor(private http: HttpClient) {}
 
   getData() {
-
-
-        this.http
+this.http
 	.get('https://localhost:7158/api/persons/')
 	.subscribe(data => {
 		console.log(data);

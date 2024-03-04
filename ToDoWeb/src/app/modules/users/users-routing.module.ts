@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersPage } from './pages/users/users.page';
 
-
 const routes: Routes = [
   {
     path: '',
@@ -10,7 +9,6 @@ const routes: Routes = [
   }
 
 ];
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

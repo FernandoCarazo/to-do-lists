@@ -31,6 +31,9 @@
       ],
       "@tasks/*": [
         "src/app/modules/tasks/*"
+      ],
+      "@extensions/*": [
+        "src/app/extensions/*"
       ]
     }
   },

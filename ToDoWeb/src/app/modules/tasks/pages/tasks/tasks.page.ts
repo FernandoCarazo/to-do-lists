@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { CRUDService } from 'src/app/services/crud/crud.service';
+import { TaskApi } from 'src/app/api/tasks/task.api';
+import { UserApi } from 'src/app/api/users/user.api';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Task } from 'src/app/api/tasks/task.model';
 import { Status } from 'src/app/api/status/status.model'; 
 import { User } from 'src/app/api/users/user.model';
@@ -13,128 +15,93 @@ import { User } from 'src/app/api/users/user.model';
   styleUrls: ['./tasks.page.css']
 })
 export class TasksPage {
-  faPencil = faPencil;
+  public faPencil = faPencil;
+  public faCircleExclamation = faCircleExclamation;
+  public id: string;
+  public tasks: Task[] =[];
+  public user: User;
+  public isCreateTaskModalOpen: boolean = false;
+  public isEditTaskModalOpen: boolean = false;
+  public modalTitle: string = '';
+  public taskVariable: Task = new Task();
 
-  public id:string;
-  public Tasks:Task[] =[];
-  Users:User[]=[];
-
-  statusOptions: Status[] = [
+  public statusOptions: Status[] = [
     { id: '1', status: 'Active' },
     { id: '2', status: 'Completed' },
     { id: '3', status: 'Canceled' }
   ];
 
-  groupedTasks: { [status: string]: Task[] } = {
+  public groupedTasks: { [status: string]: Task[] } = {
     'Active': [],
     'Completed': [],
     'Canceled': []
   };
 
-  taskVariable: Task = {
-    id: '',
-    assignmentName: '',
-    assignmentDescription: '',
-    assignmentDate: null,
-    status: {
-      id: '',
-      status: '',
-    },
-    user: {
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: ''
-    }
-  };
+  constructor(private router: Router, 
+    private route: ActivatedRoute, 
+    private taskAPI: TaskApi, private userAPI: UserApi) {       
+  }
 
-  isCreateTaskModalOpen = false;
-  isEditTaskModalOpen = false;
-  modalTitle: string = '';
+  public ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
 
+    this.userAPI.GetUserById(this.id).subscribe(result => {
+      this.user = new User(result.data);
+    });
+    
+    this.loadTasks();
+  }
 
-  openModal(modalType: string, task?: Task, user?: User) {
+  public setAssignmentDate(value: string): void {
+    this.taskVariable.assignmentDate = value?new Date(value):null;
+
+    // this.taskVariable.assignmentDate = value?new Date(value)?.toLocaleDisplayString(value);
+
+    // this.taskVariable.assignmentDate = new Date(data.assignmentDate)?.toInputDateString();
+  }
+
+  public openModal(modalType: string, task?: Task): void {
     this.modalTitle = modalType;
 
     if(modalType === 'Create Task'){
-      this.taskVariable = {
-        id: '',
-        assignmentName: '',
-        assignmentDescription: '',
-        assignmentDate: null,
-        status: {
-          id: '',
-          status: '',
-        },
-        user: {
-          id: '',
-          firstName: '',
-          lastName: '',
-          email: ''
-        }
-      };
+      this.taskVariable = new Task({user: this.user});
       this.isCreateTaskModalOpen = true;      
     }
     else if (modalType === 'Edit Task') {
-      this.taskVariable = {
-        id: task.id,
-        assignmentName: task.assignmentName,
-        assignmentDescription: task.assignmentDescription,
-        assignmentDate: task.assignmentDate,
-        status: task.status,
-        user: user
-      };
+      this.taskVariable = task;
       this.isEditTaskModalOpen = true;
     }
   }
 
-  closeModal(modalType: string) {
+  public closeModal(modalType: string) {
     if(modalType === 'Create Task'){
       this.isCreateTaskModalOpen = false;
+      this.loadTasks();
      }   
      else if (modalType === 'Edit Task') {
       this.isEditTaskModalOpen = false;
+      this.closeModal('Edit Task');
+      this.loadTasks();
+
     }   
   }
 
-  createTask() {
-    let TaskCreate: Task;
-    TaskCreate = new Task(this.taskVariable);
-
-    this.crudService.createTask(TaskCreate, TaskCreate.user.id).subscribe({
+  public createTask(): void {
+    this.taskAPI.CreateTask(this.taskVariable, this.taskVariable.user.id).subscribe({
       next: (response) => {
         console.log('Response:', response);
         if(!response.success){
           alert(response.messages.join('\n'));
         }
         else{
-          this.taskVariable = {
-            id: '',
-            assignmentName: '',
-            assignmentDescription: '',
-            assignmentDate: null,
-            status: {
-              id: '',
-              status: '',
-            },
-            user: {
-              id: '',
-              firstName: '',
-              lastName: '',
-              email: ''
-            }
-          };
-          window.location.reload();
+          this.closeModal('Create Task');
         }      
       }
     });
   }
 
-  updateTask(task?: Task, user?: User) {
-    let TaskUpdate: Task;
-    TaskUpdate = new Task(this.taskVariable);
-    
-    this.crudService.updateTask(TaskUpdate, TaskUpdate.user.id, TaskUpdate.id).subscribe({
+  public updateTask(): void {
+    this.taskAPI.UpdateTask(this.taskVariable, this.user.id, this.taskVariable.id).subscribe({
       next: (response) => {
       console.log('Response:', response);
 
@@ -142,36 +109,21 @@ export class TasksPage {
         alert(response.messages.join('\n'));
       }
       else{
-        this.isEditTaskModalOpen= false;
-        this.taskVariable = {
-          id: '',
-          assignmentName: '',
-          assignmentDescription: '',
-          assignmentDate: null,
-          status: {
-            id: '',
-            status: '',
-          },
-          user: {
-            id: '',
-            firstName: '',
-            lastName: '',
-            email: ''
-          }
-        };
-        window.location.reload();
+        this.closeModal('Edit Task');
+        this.loadTasks();
+
       }}      
     });
   }
 
-  groupTasksByStatus() {
+  private groupTasksByStatus() {
     this.groupedTasks = {
       'Active': [],
       'Completed': [],
       'Canceled': []
     };
 
-    this.Tasks.forEach(task => {
+    this.tasks.forEach(task => {
       switch (task.status.status) {
         case 'Active':
           this.groupedTasks['Active'].push(task);
@@ -186,7 +138,7 @@ export class TasksPage {
     });
   }
 
-  getBorderColor(taskStatus: string): string {
+  public getBorderColor(taskStatus: string): string {
     switch (taskStatus) {
       case 'Active':
         return '#c7d927'; // Set the color for active tasks  
@@ -199,23 +151,10 @@ export class TasksPage {
     }
   }
 
-    constructor(private router: Router, 
-      private route: ActivatedRoute, 
-      private crudService: CRUDService) { 
-    }
-
-    ngOnInit(): void {
-      this.id = this.route.snapshot.paramMap.get('id');
-
-      this.crudService.GetUserById(this.id).subscribe(result => {
-        this.Users = [result.data]; // Wrap the user object in an array if necessary
-        console.log("All Users:", this.Users);
-      });
-      
-      this.crudService.GetTasks(this.id).subscribe(result=>{
-        this.Tasks = result.data;
+    private loadTasks(): void{
+      this.taskAPI.GetTasks(this.id).subscribe(result=>{
+        this.tasks = result.data;
         this.groupTasksByStatus(); 
       });
-      
     }
 }
