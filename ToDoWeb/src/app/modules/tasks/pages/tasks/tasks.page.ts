@@ -4,6 +4,7 @@ import { UserApi } from 'src/app/api/users/user.api';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Task } from 'src/app/api/tasks/task.model';
 import { Status } from 'src/app/api/status/status.model'; 
 import { User } from 'src/app/api/users/user.model';
@@ -14,8 +15,8 @@ import { User } from 'src/app/api/users/user.model';
   styleUrls: ['./tasks.page.css']
 })
 export class TasksPage {
-  faPencil = faPencil;
-
+  public faPencil = faPencil;
+  public faCircleExclamation = faCircleExclamation;
   public id: string;
   public tasks: Task[] =[];
   public user: User;
@@ -24,7 +25,7 @@ export class TasksPage {
   public modalTitle: string = '';
   public taskVariable: Task = new Task();
 
-  statusOptions: Status[] = [
+  public statusOptions: Status[] = [
     { id: '1', status: 'Active' },
     { id: '2', status: 'Completed' },
     { id: '3', status: 'Canceled' }
@@ -38,8 +39,7 @@ export class TasksPage {
 
   constructor(private router: Router, 
     private route: ActivatedRoute, 
-    private taskAPI: TaskApi, private userAPI: UserApi) { 
-      
+    private taskAPI: TaskApi, private userAPI: UserApi) {       
   }
 
   public ngOnInit(): void {
@@ -76,9 +76,13 @@ export class TasksPage {
   public closeModal(modalType: string) {
     if(modalType === 'Create Task'){
       this.isCreateTaskModalOpen = false;
+      this.loadTasks();
      }   
      else if (modalType === 'Edit Task') {
       this.isEditTaskModalOpen = false;
+      this.closeModal('Edit Task');
+      this.loadTasks();
+
     }   
   }
 
@@ -91,7 +95,6 @@ export class TasksPage {
         }
         else{
           this.closeModal('Create Task');
-          this.loadTasks();
         }      
       }
     });
@@ -108,6 +111,7 @@ export class TasksPage {
       else{
         this.closeModal('Edit Task');
         this.loadTasks();
+
       }}      
     });
   }

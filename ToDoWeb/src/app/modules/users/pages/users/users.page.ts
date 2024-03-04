@@ -1,8 +1,10 @@
 import { Component, ElementRef, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
 import { UserApi } from 'src/app/api/users/user.api';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { User } from 'src/app/api/users/user.model';
 
 class ExpandableUser extends User{
@@ -20,8 +22,7 @@ class ExpandableUser extends User{
 
 })
 export class UsersPage {
-  @Output() closingDropdown = new EventEmitter<void>();
-
+  public faCircleExclamation = faCircleExclamation;
   public faEllipsisVertical = faEllipsisVertical;
   public users: ExpandableUser[];
   public userid: string;
@@ -43,14 +44,12 @@ export class UsersPage {
   constructor(private router: Router, 
     private route: ActivatedRoute, 
     private userAPI: UserApi, private elementRef: ElementRef) {
-
   }
 
   public ngOnInit(): void {
-    this.userAPI.GetUsers().subscribe(result=>{
-      this.users = result.data.map((user: any)=>new ExpandableUser(user));
-    })
+    this.loadUsers();
   }
+
   public openModal(modalType: string, user?: User) {
     this.modalTitle = modalType;
 
@@ -58,9 +57,9 @@ export class UsersPage {
      this.isCreateUserModalOpen = true;
      this.userVariable = {
       id: '',
-      firstName: '', 
+      firstName: '',
       lastName: '',
-      email: '',
+      email: ''
     };
     } 
     else if(modalType === 'Edit User') {
@@ -81,6 +80,7 @@ export class UsersPage {
     public closeModal(modalType: string) {
     if(modalType === 'Create User'){
       this.isCreateUserModalOpen = false;
+      this.loadUsers();
      }   
      else if(modalType === 'Edit User'){
         this.isEditUserModalOpen=false;
@@ -111,7 +111,6 @@ export class UsersPage {
       }
   }
 
-
   public createUser() {
     this.userAPI.CreateUser(this.userVariable).subscribe({
       next: (response) => {
@@ -126,7 +125,8 @@ export class UsersPage {
             lastName: '',
             email: ''
           };
-          window.location.reload();
+          this.closeModal('Create User');
+          this.loadUsers();
         }
       }
     });
@@ -141,13 +141,14 @@ export class UsersPage {
           alert(response.messages.join('\n'));
         }
         else{
+          this.loadUsers();
+
           this.userVariable = {
             id: '',
             firstName: '',
             lastName: '',
             email: ''
           };
-          window.location.reload();
         }
       }
     })
@@ -158,12 +159,18 @@ export class UsersPage {
       next: (response) => {
         console.log(userId);
         console.log('User deleted successfully', response);
-        this.isDeleteUserModalOpen = false;
-        window.location.reload();
+        this.loadUsers();
+        this.closeModal('Delete User');
       },
       error: (error) => {
         console.error('Error deleting user', error);
       },
+    });
+  }
+
+  private loadUsers(): void{
+    this.userAPI.GetUsers().subscribe(result=>{
+      this.users = result.data.map((user: any)=>new ExpandableUser(user));
     });
   }
 }
