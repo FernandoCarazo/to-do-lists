@@ -9,6 +9,7 @@ import { Task } from 'src/app/api/tasks/task.model';
 import { Status } from 'src/app/api/status/status.model'; 
 import { User } from 'src/app/api/users/user.model';
 
+
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.page.html',
@@ -110,7 +111,6 @@ export class TasksPage {
       }
       else{
         this.closeModal('Edit Task');
-        this.loadTasks();
 
       }}      
     });

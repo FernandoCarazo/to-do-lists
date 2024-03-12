@@ -186,7 +186,6 @@ input:focus::placeholder {
 
 fa-icon#alertIcon {
     color: red;
-
 }
 
 input.submit:hover {
@@ -194,13 +193,15 @@ input.submit:hover {
     opacity: 0.85;
 }
 
-
-
 .TaskCard:hover {
     opacity: 1;
 }
 
 .dropbtn:hover {
+    opacity: 1;
+}
+
+dropbtn:focus {
     opacity: 1;
 }
 
